@@ -49,8 +49,10 @@ void json_object_int_add(struct json_object *obj, const char *key, int64_t i)
 {
 #if defined(HAVE_JSON_C_JSON_H)
 	json_object_object_add(obj, key, json_object_new_int64(i));
-#else
+#elif defined(HAVE_JSON_JSON_H)
 	json_object_object_add(obj, key, json_object_new_int((int)i));
+#else
+	jc_object_int_add(obj, key, i);
 #endif
 }
 
@@ -79,7 +81,7 @@ void json_object_free(struct json_object *obj)
 	json_object_put(obj);
 }
 
-#if !defined(HAVE_JSON_C_JSON_H)
+#if defined(HAVE_JSON_JSON_H)
 int json_object_object_get_ex(struct json_object *obj, const char *key,
 			      struct json_object **value)
 {

@@ -41,7 +41,7 @@ extern "C" {
 	     json_object_iter_equal(&(joi), &(join)) == 0;                     \
 	     json_object_iter_next(&(joi)))
 
-#else
+#elif defined(HAVE_JSON_JSON_H)
 #include <json/json.h>
 
 /*
@@ -52,6 +52,11 @@ extern "C" {
 
 extern int json_object_object_get_ex(struct json_object *obj, const char *key,
 				     struct json_object **value);
+
+#elif defined(HAVE_JANSSON_H)
+#include <lib/jansson_compat.h>
+#else
+#error no json library presents
 #endif
 
 #include "command.h"

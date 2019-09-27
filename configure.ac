@@ -593,9 +593,14 @@ AS_IF([test "${enable_clippy_only}" != "yes"], [
 AC_CHECK_HEADERS([json-c/json.h])
 AC_CHECK_LIB([json-c], [json_object_get], [LIBS="$LIBS -ljson-c"], [], [-lm])
 if test "$ac_cv_lib_json_c_json_object_get" = no; then
+  AC_CHECK_HEADERS([json/json.h])
   AC_CHECK_LIB([json], [json_object_get], [LIBS="$LIBS -ljson"])
   if test "$ac_cv_lib_json_json_object_get" = no; then
-      AC_MSG_ERROR([libjson is needed to compile])
+    AC_CHECK_HEADERS([jansson.h])
+    AC_CHECK_LIB([jansson], [json_object_get], [LIBS="$LIBS -ljansson"])
+    if test "$ac_cv_lib_jansson_json_object_get" = no; then
+      AC_MSG_ERROR([libjson or libjansson are needed to compile])
+    fi
   fi
 fi
 ])
@@ -1524,8 +1529,10 @@ else
   esac
 fi
 
-if test "$ac_cv_lib_json_c_json_object_get" = no -a "x$BFDD" = "xbfdd"; then
-  AC_MSG_ERROR(["you must use json-c library to use bfdd"])
+if test "x$BFDD" = "xbfdd"; then
+  if test "$ac_cv_lib_json_c_json_object_get" = no -a "$ac_cv_lib_jansson_json_object_get" = no; then
+    AC_MSG_ERROR(["you must use json-c or jansson library to use bfdd"])
+  fi
 fi
 
 NHRPD=""
