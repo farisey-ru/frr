@@ -189,6 +189,7 @@ extern "C" {
 
 /* MAX / MIN are not commonly defined, but useful */
 /* note: glibc sys/param.h has #define MIN(a,b) (((a)<(b))?(a):(b)) */
+#include <sys/param.h>		/* MIN/MAX */
 #ifdef MAX
 #undef MAX
 #endif
