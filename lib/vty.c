@@ -94,8 +94,10 @@ char vty_cwd[MAXPATHLEN];
 /* Login password check. */
 static int no_password_check = 0;
 
+#ifdef VTYSH
 /* Integrated configuration file path */
 static char integrate_default[] = SYSCONFDIR INTEGRATE_DEFAULT_CONFIG;
+#endif
 
 static bool do_log_commands;
 static bool do_log_commands_perm;
