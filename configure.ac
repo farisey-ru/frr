@@ -54,7 +54,7 @@ elif test "$host" != "$build"; then
   AC_MSG_NOTICE([...])
 
   (
-    for var in $ac_precious_vars; do
+    for var in $ac_precious_vars AR LD NM OBJCOPY OBJDUMP RANLIB STRIP; do
       dnl special cases
       case "$var" in
       YACC|YFLAGS) continue;;
