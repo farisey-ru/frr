@@ -136,6 +136,18 @@ typedef unsigned char uint8_t;
 
 #ifdef CRYPTO_OPENSSL
 #include <openssl/evp.h>
+#include <openssl/opensslv.h>
+#if OPENSSL_VERSION_NUMBER < 0x10100000L
+/* OpenSSL API was changed at 959ed5316c84d0e12ad18acfd40cefe15603ddfb */
+static inline EVP_MD_CTX *EVP_MD_CTX_new(void)
+{
+	return EVP_MD_CTX_create();
+}
+static inline void EVP_MD_CTX_free(EVP_MD_CTX *ctx)
+{
+	EVP_MD_CTX_destroy(ctx);
+}
+#endif
 #include <openssl/hmac.h>
 #endif
 
