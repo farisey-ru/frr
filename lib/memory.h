@@ -144,12 +144,24 @@ struct memgroup {
 	__asm__(".equiv MTYPE_" #name ", _mt_" #name "\n\t"                    \
 		".global MTYPE_" #name "\n");                                  \
 	/* end */
+
+#ifdef __clang__
 /* and this one's borked on clang, it drops static on aliases :/, so... asm */
 #define DEFINE_MTYPE_STATIC(group, name, desc)                                 \
 	DEFINE_MTYPE_ATTR(group, name, static, desc)                           \
 	extern struct memtype MTYPE_##name[1];                                 \
 	__asm__(".equiv MTYPE_" #name ", _mt_" #name "\n");                    \
 	/* end */
+#else
+/* gcc makes static alias correctly and .equiv is bad on MIPS gcc at least
+ * see https://gcc.gnu.org/bugzilla/show_bug.cgi?id=92030
+ */
+#define DEFINE_MTYPE_STATIC(group, name, desc)                                 \
+	DEFINE_MTYPE_ATTR(group, name, static, desc)                           \
+	static struct memtype MTYPE_##name[1]                                  \
+	__attribute__((alias("_mt_" #name)));                                  \
+	/* end */
+#endif
 
 DECLARE_MGROUP(LIB)
 DECLARE_MTYPE(TMP)
